@@ -97,12 +97,12 @@ def run_remote_iptables_commands(allowed_ip: str) -> None:
     private_key = parse_private_key(private_key_value)
 
     commands = [
-        "iptables -D DOCKER-USER -p tcp --dport 25565 -j DROP",
+        "sudo -n iptables -D DOCKER-USER -p tcp --dport 25565 -j DROP",
         (
-            "iptables -A DOCKER-USER -p tcp --dport 25565 "
+            "sudo -n iptables -A DOCKER-USER -p tcp --dport 25565 "
             f"-s {allowed_ip} -j ACCEPT"
         ),
-        "iptables -A DOCKER-USER -p tcp --dport 25565 -j DROP",
+        "sudo -n iptables -A DOCKER-USER -p tcp --dport 25565 -j DROP",
     ]
 
     client = paramiko.SSHClient()
