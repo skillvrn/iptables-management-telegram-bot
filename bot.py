@@ -68,7 +68,6 @@ def parse_private_key(private_key_raw: str) -> paramiko.PKey:
         paramiko.Ed25519Key.from_private_key,
         paramiko.RSAKey.from_private_key,
         paramiko.ECDSAKey.from_private_key,
-        paramiko.DSSKey.from_private_key,
     ]
 
     last_exception: Optional[Exception] = None
