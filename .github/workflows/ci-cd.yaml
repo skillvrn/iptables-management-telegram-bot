@@ -107,11 +107,11 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ vars.DEPLOY_SSH_PORT }} ${{ vars.DEPLOY_SSH_USERNAME }}@${{ vars.DEPLOY_SSH_HOST }} << EOF
             cd /srv/iptables-management-telegram-bot
-            docker pull ${{ vars.DOCKER_REPO }}/iptables-management-telegram-bot:$SHORT_SHA
+            sudo docker pull ${{ vars.DOCKER_REPO }}/iptables-management-telegram-bot:$SHORT_SHA
             export TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}"
             export BOT_TARGET_SSH_PRIVATE_KEY='${{ secrets.BOT_TARGET_SSH_PRIVATE_KEY }}'
-            docker-compose down
-            docker-compose up -d
-            docker system prune -f
-            docker image prune -a -f
+            sudo --preserve-env=TELEGRAM_BOT_TOKEN,BOT_TARGET_SSH_PRIVATE_KEY docker compose down
+            sudo --preserve-env=TELEGRAM_BOT_TOKEN,BOT_TARGET_SSH_PRIVATE_KEY docker compose up -d
+            sudo docker system prune -f
+            sudo docker image prune -a -f
           EOF
