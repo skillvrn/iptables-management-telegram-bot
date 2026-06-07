@@ -129,7 +129,9 @@ def run_remote_iptables_commands(allowed_ip: str) -> None:
                     .strip()
                 )
                 raise RuntimeError(
-                    f"Command failed (exit {exit_code}): {command}. {error_output}"
+                    "Command failed "
+                    f"(exit {exit_code}): {command}. "
+                    f"{error_output}"
                 )
     finally:
         client.close()
@@ -237,7 +239,10 @@ def main() -> None:
 
     conversation_handler = ConversationHandler(
         entry_points=[
-            MessageHandler(filters.Regex(f"^{ADD_IP_BUTTON_TEXT}$"), prompt_ip),
+            MessageHandler(
+                filters.Regex(f"^{ADD_IP_BUTTON_TEXT}$"),
+                prompt_ip,
+            ),
         ],
         states={
             WAITING_FOR_IP: [
