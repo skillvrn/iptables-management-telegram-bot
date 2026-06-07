@@ -79,7 +79,9 @@ def parse_private_key(private_key_raw: str) -> paramiko.PKey:
         except Exception as exc:  # pragma: no cover
             last_exception = exc
 
-    raise ConfigError("Failed to parse BOT_TARGET_SSH_PRIVATE_KEY") from last_exception
+    raise ConfigError(
+        "Failed to parse BOT_TARGET_SSH_PRIVATE_KEY"
+    ) from last_exception
 
 
 def run_remote_iptables_commands(allowed_ip: str) -> None:
@@ -97,7 +99,10 @@ def run_remote_iptables_commands(allowed_ip: str) -> None:
 
     commands = [
         "iptables -D DOCKER-USER -p tcp --dport 25565 -j DROP",
-        f"iptables -A DOCKER-USER -p tcp --dport 25565 -s {allowed_ip} -j ACCEPT",
+        (
+            "iptables -A DOCKER-USER -p tcp --dport 25565 "
+            f"-s {allowed_ip} -j ACCEPT"
+        ),
         "iptables -A DOCKER-USER -p tcp --dport 25565 -j DROP",
     ]
 
@@ -118,7 +123,11 @@ def run_remote_iptables_commands(allowed_ip: str) -> None:
             stdin.close()
             exit_code = stdout.channel.recv_exit_status()
             if exit_code != 0:
-                error_output = stderr.read().decode("utf-8", errors="replace").strip()
+                error_output = (
+                    stderr.read()
+                    .decode("utf-8", errors="replace")
+                    .strip()
+                )
                 raise RuntimeError(
                     f"Command failed (exit {exit_code}): {command}. {error_output}"
                 )
@@ -133,7 +142,9 @@ async def ensure_admin(update: Update) -> bool:
     try:
         admin_ids = get_admin_ids()
     except ConfigError:
-        await update.message.reply_text("Некорректный ADMINS_IDS в переменных окружения.")
+        await update.message.reply_text(
+            "Некорректный ADMINS_IDS в переменных окружения."
+        )
         return False
 
     if update.effective_user.id not in admin_ids:
@@ -177,12 +188,18 @@ async def add_ip(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     try:
         parsed_ip = ipaddress.ip_address(ip_text)
     except ValueError:
-        await update.message.reply_text("IP адрес некорректный. Попробуйте снова:")
+        await update.message.reply_text(
+            "IP адрес некорректный. Попробуйте снова:"
+        )
         return WAITING_FOR_IP
 
     loop = asyncio.get_running_loop()
     try:
-        await loop.run_in_executor(None, run_remote_iptables_commands, str(parsed_ip))
+        await loop.run_in_executor(
+            None,
+            run_remote_iptables_commands,
+            str(parsed_ip),
+        )
     except Exception as exc:
         logger.exception("Failed to update iptables")
         await update.message.reply_text(
@@ -197,7 +214,10 @@ async def add_ip(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     return ConversationHandler.END
 
 
-async def fallback_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def fallback_menu(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> int:
     del context
     if not await ensure_admin(update):
         return ConversationHandler.END
@@ -232,7 +252,9 @@ def main() -> None:
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(conversation_handler)
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, fallback_menu))
+    application.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, fallback_menu)
+    )
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 

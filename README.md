@@ -61,7 +61,7 @@ This sequence removes a previous default DROP rule, adds allowlist access for th
 | `BOT_TARGET_SSH_HOST` | yes | `10.0.0.5` | Host where bot executes `iptables` |
 | `BOT_TARGET_SSH_PORT` | no | `22` | SSH port for target host (default `22`) |
 | `BOT_TARGET_SSH_USERNAME` | yes | `ubuntu` | SSH username for target host |
-| `BOT_TARGET_SSH_PRIVATE_KEY` | yes | `-----BEGIN...` | SSH private key for target host |
+| `BOT_TARGET_SSH_PRIVATE_KEY` | yes | `<paste_private_key_here>` | SSH private key for target host |
 
 Note: `BOT_TARGET_SSH_PRIVATE_KEY` can be passed as multiline content or as a single line with `\n`.
 
@@ -77,7 +77,7 @@ export ADMINS_IDS="123456789,987654321"
 export BOT_TARGET_SSH_HOST="10.0.0.5"
 export BOT_TARGET_SSH_PORT="22"
 export BOT_TARGET_SSH_USERNAME="ubuntu"
-export BOT_TARGET_SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\n...\n-----END OPENSSH PRIVATE KEY-----"
+export BOT_TARGET_SSH_PRIVATE_KEY="<paste_private_key_here>"
 
 python bot.py
 ```
@@ -93,9 +93,11 @@ docker run --rm -it \
 	-e BOT_TARGET_SSH_HOST="10.0.0.5" \
 	-e BOT_TARGET_SSH_PORT="22" \
 	-e BOT_TARGET_SSH_USERNAME="ubuntu" \
-	-e BOT_TARGET_SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\n...\n-----END OPENSSH PRIVATE KEY-----" \
+	-e BOT_TARGET_SSH_PRIVATE_KEY="<paste_private_key_here>" \
 	iptables-management-telegram-bot:local
 ```
+
+Never store real private keys in the repository, examples, or commit history.
 
 ## CI/CD Variables (GitHub Actions)
 
