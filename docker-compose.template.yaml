@@ -1,0 +1,23 @@
+services:
+  iptables-management-telegram-bot:
+    image: ${DOCKER_REPO}/iptables-management-telegram-bot:${VERSION}
+    pull_policy: if_not_present
+    restart: always
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      ADMINS_IDS: ${ADMINS_IDS}
+      MINECRAFT_CHAT_ID: ${MINECRAFT_CHAT_ID}
+      BOT_TARGET_SSH_HOST: ${BOT_TARGET_SSH_HOST}
+      BOT_TARGET_SSH_PORT: ${BOT_TARGET_SSH_PORT}
+      BOT_TARGET_SSH_USERNAME: ${BOT_TARGET_SSH_USERNAME}
+      BOT_TARGET_SSH_PRIVATE_KEY: ${BOT_TARGET_SSH_PRIVATE_KEY}
+    volumes:
+      - ./data:/app/data
+    networks:
+      - iptables_management_bot_network
+
+volumes:
+  data:
+
+networks:
+  iptables_management_bot_network:
